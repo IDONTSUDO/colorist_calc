@@ -36,7 +36,7 @@ jobs:
       run: cd ui && npm install
 
     - name: Build UI
-      run: cd ui && npm run build
+      run: cd colorist_calc && npm run build
 
     - name: Deploy UI
       env:
@@ -48,4 +48,4 @@ jobs:
         eval $(ssh-agent -s)
         echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
         ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
-        rsync -r --delete-after ./_/ui/build/ $USER@$HOST:/root/_/ui/build
+        rsync -r --delete-after ./colorist_calc/colorist_calc/build/ $USER@$HOST:/root/colorist_calc/colorist_calc/build
