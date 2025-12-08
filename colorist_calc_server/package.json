@@ -6,6 +6,8 @@
     "test": "npx jest",
     "test:watch": "nodemon --watch ./ --ext ts --exec \"mocha -r ts-node/register 'test/**/*.spec.ts'\"",
     "dev": "nodemon",
+    "build": "tsc",
+    "prod": "pm2 start ecosystem.config.js",
     "migrate": "npx prisma migrate dev --name init"
   },
   "keywords": [],
