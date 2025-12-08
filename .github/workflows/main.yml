@@ -31,7 +31,7 @@ jobs:
         eval $(ssh-agent -s)
         echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
         ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
-        rsync -r --delete-after ./_/server/build/ $USER@$HOST:/root/_/server/build
+        rsync -r --delete-after ./coloris_calc/colorist_calc_server/build/ $USER@$HOST:/root/coloris_calc/colorist_calc_server/build
     - name: Install dependencies UI
       run: cd ui && npm install
 
