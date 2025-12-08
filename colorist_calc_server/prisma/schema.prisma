@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  login      String   @unique
+  name       String
+  password   String
+  createDate DateTime @default(now())
+}
+
+model Client {
+  id          Int      @id @default(autoincrement())
+  name        String
+  family      String
+  surName     String
+  numberPhone String
+  createDate  DateTime @default(now())
+}
+
+model Component {
+  id             Int    @id @default(autoincrement())
+  weight         Int //вес граммы
+  costPrice      Int //цена
+  privateNumber  String //номер
+  currentBalance Int // текущий остаток в граммах
+}
+
+model Consumables {
+  id                Int    @id @default(autoincrement())
+  costPrice         Int //цена за единицу измеренеия
+  description       String // описание
+  currentBalance    Int // текущий остаток
+  unitOfMeasurement String //еденица измерения
+}
+
+model Recipe {
+  id                                      Int    @id @default(autoincrement())
+  componentsIds                           Int[] //Компоненты
+  components                              Json //Компоненты
+  weightOfIngredientsAccordingToTheRecipe Int // Вес компонентов по рецепту
+  weightOfTheCan                          Int // Вес банки
+  actualWeightOfComponents                Int // Реальный вес компонентов
+  weightOfComponentsAfterDusting          Int // Вес компонентов после отпыла
+  auto                                    String // авто
+  cardIndexNumber                         String // Номер в картотеке
+  comment String @default("") //коментарий
+}
+
+model Order {
+  id                             Int      @id @default(autoincrement())
+  auto                           String //АВТО
+  codePaint                      String //КОД КРАСКИ
+  color                          String //ЦВЕТ
+  theVolumeOfPainTheCustomerWant Int //ОБЬЕМ КРАСКИ КОТОРУЮ ХОЧЕТ КЛИЕНТ в граммах
+  client                         Int //ID model Client
+  statusOrder                    String   @default("Начат") //НАЧАТ,ЗАКОНЧЕН
+  orderProcess                   String? //ПО ГОТОВОМУ РЕЦЕПТУ, НОВЫЙ РЕЦЕПТ 
+  orderCharacteristics           String?
+  recipeJSON                     Json?
+  financeStatus                  String   @default("Ожидает расчета")
+  consumablesJson                Json?
+  markup                         Int      @default(0)
+  createdAt                      DateTime @default(now())
+  user String
+}
