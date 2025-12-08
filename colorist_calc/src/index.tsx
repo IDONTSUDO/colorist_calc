@@ -7,7 +7,7 @@ import { router } from "./core/routers/routers";
 import { extensions } from "./core/extensions/extensions";
 import { AuthService } from "./core/service/auth_service";
 import { configure } from "mobx";
- 
+
 import { ThemeStore } from "./core/store/theme_store";
 
 configure({
@@ -19,8 +19,6 @@ export const themeStore = new ThemeStore();
 extensions();
 createRoot(document.getElementById("root")!).render(
   <>
-
-  31212312
     <RouterProvider router={router} />
-   </>
+  </>
 );
