@@ -1,0 +1,51 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14' # Замените на нужную версию Node.js
+    - name: Install dependencies Server
+      run: cd server && npm install
+    - name: Build Server
+      run: cd server && npm run build
+    - name: Deploy Server
+      env:
+        HOST: ${{ secrets.HOST }} # Адрес вашего сервера
+        USER: ${{ secrets.USER }} # Имя пользователя на сервере
+        KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
+      run: |
+        cd .. && mkdir -p ~/.ssh 
+        eval $(ssh-agent -s)
+        echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
+        ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+        rsync -r --delete-after ./_/server/build/ $USER@$HOST:/root/_/server/build
+    - name: Install dependencies UI
+      run: cd ui && npm install
+
+    - name: Build UI
+      run: cd ui && npm run build
+
+    - name: Deploy UI
+      env:
+        HOST: ${{ secrets.HOST }} # Адрес вашего сервера
+        USER: ${{ secrets.USER }} # Имя пользователя на сервере
+        KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
+      run: |
+        cd .. && mkdir -p ~/.ssh 
+        eval $(ssh-agent -s)
+        echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
+        ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+        rsync -r --delete-after ./_/ui/build/ $USER@$HOST:/root/_/ui/build
