@@ -33,7 +33,7 @@ jobs:
         ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         rsync -r --delete-after ./colorist_calc/colorist_calc_server/build/ $USER@$HOST:/root/colorist_calc/colorist_calc_server/build
     - name: Install dependencies UI
-      run: cd ui && npm install
+      run: cd colorist_calc && npm install
 
     - name: Build UI
       run: cd colorist_calc && npm run build
