@@ -43,7 +43,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "serve -s build",
-    "prod": "pm2 serve build/ 3000 --name 'ui' --spa"
+    "prod": "pm2 delete ui && pm2 serve build/ 3000 --name 'ui' --spa pm2 serve build/ 3000 --name 'ui' --spa"
   },
   "eslintConfig": {
     "extends": [
