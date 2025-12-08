@@ -22,7 +22,7 @@ jobs:
     - name: Build Server
       run: cd colorist_calc_server && npm run build
     - name: Build .ENV
-      run: cd colorist_calc_server && echo $ENV > .env
+      run: cd colorist_calc_server && echo '123123' > .env
     - name: Deploy Server
       env:
         HOST: ${{ secrets.HOST }} # Адрес вашего сервера
