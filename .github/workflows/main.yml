@@ -18,9 +18,9 @@ jobs:
       with:
         node-version: '14' # Замените на нужную версию Node.js
     - name: Install dependencies Server
-      run: cd server && npm install
+      run: cd colorist_calc_server && npm install
     - name: Build Server
-      run: cd server && npm run build
+      run: cd colorist_calc_server && npm run build
     - name: Deploy Server
       env:
         HOST: ${{ secrets.HOST }} # Адрес вашего сервера
