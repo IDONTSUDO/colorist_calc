@@ -21,6 +21,8 @@ jobs:
       run: cd colorist_calc_server && npm install
     - name: Build Server
       run: cd colorist_calc_server && npm run build
+    - name: Build .ENV
+      run: cd colorist_calc_server && echo $ENV > .env
     - name: Deploy Server
       env:
         HOST: ${{ secrets.HOST }} # Адрес вашего сервера
