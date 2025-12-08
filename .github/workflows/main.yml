@@ -25,6 +25,7 @@ jobs:
       run: cd colorist_calc_server && echo "$ENV" > .env
     - name: Deploy Server
       env:
+        ENV: ${{ secrets.ENV }}
         HOST: ${{ secrets.HOST }} # Адрес вашего сервера
         USER: ${{ secrets.USER }} # Имя пользователя на сервере
         KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
