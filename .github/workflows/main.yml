@@ -3,52 +3,52 @@ name: Deploy App
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '23.9.0' # Замените на нужную версию Node.js
-    - name: Install dependencies Server
-      run: cd colorist_calc_server && npm install
-    - name: Build Server
-      run: cd colorist_calc_server && npm run build
-    - name: Build .ENV
-      run: cd colorist_calc_server && echo $ENV > .env
-    - name: Deploy Server
-      env:
-        ENV: ${{ secrets.ENV }}
-        HOST: ${{ secrets.HOST }} # Адрес вашего сервера
-        USER: ${{ secrets.USER }} # Имя пользователя на сервере
-        KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
-      run: |
-        cd .. && mkdir -p ~/.ssh 
-        eval $(ssh-agent -s)
-        echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
-        ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
-        rsync -r --delete-after ./colorist_calc/colorist_calc_server/ $USER@$HOST:/root/colorist_calc/colorist_calc_server/
-    - name: Install dependencies UI
-      run: cd colorist_calc && npm install
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "23.9.0" # Замените на нужную версию Node.js
+      - name: Install dependencies Server
+        run: cd colorist_calc_server && npm install
+      - name: Build Server
+        run: cd colorist_calc_server && npm run build
+      - name: Build .ENV
+        run: cd colorist_calc_server && echo "${{ secrets.ENV }}" > myfile.txt
+      - name: Deploy Server
+        env:
+          ENV: ${{ secrets.ENV }}
+          HOST: ${{ secrets.HOST }} # Адрес вашего сервера
+          USER: ${{ secrets.USER }} # Имя пользователя на сервере
+          KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
+        run: |
+          cd .. && mkdir -p ~/.ssh 
+          eval $(ssh-agent -s)
+          echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+          rsync -r --delete-after ./colorist_calc/colorist_calc_server/ $USER@$HOST:/root/colorist_calc/colorist_calc_server/
+      - name: Install dependencies UI
+        run: cd colorist_calc && npm install
 
-    - name: Build UI
-      run: cd colorist_calc && npm run build
+      - name: Build UI
+        run: cd colorist_calc && npm run build
 
-    - name: Deploy UI
-      env:
-        HOST: ${{ secrets.HOST }} # Адрес вашего сервера
-        USER: ${{ secrets.USER }} # Имя пользователя на сервере
-        KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
-      run: |
-        cd .. && mkdir -p ~/.ssh 
-        eval $(ssh-agent -s)
-        echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
-        ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
-        rsync -r --delete-after ./colorist_calc/colorist_calc/build/ $USER@$HOST:/root/colorist_calc/colorist_calc/build
+      - name: Deploy UI
+        env:
+          HOST: ${{ secrets.HOST }} # Адрес вашего сервера
+          USER: ${{ secrets.USER }} # Имя пользователя на сервере
+          KEY: ${{ secrets.PM2_PRIVATE_KEY }} # SSH ключ для доступа
+        run: |
+          cd .. && mkdir -p ~/.ssh 
+          eval $(ssh-agent -s)
+          echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+          rsync -r --delete-after ./colorist_calc/colorist_calc/build/ $USER@$HOST:/root/colorist_calc/colorist_calc/build
