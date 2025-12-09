@@ -50,6 +50,7 @@ export const CrudPage: React.FC<{
   isEditable?: boolean;
   editableComponent?: React.ReactNode;
   createButton?: boolean;
+  searchByField?: { [key: string]: () => React.ReactNode };
   isNeedDelete?: boolean;
   modalStyle?: React.CSSProperties;
   addingColumns?: { name: string; jsx: (el: any) => React.ReactNode }[];
@@ -71,6 +72,7 @@ export const CrudPage: React.FC<{
     missingKey,
     replacedColumns,
     isEditable,
+    searchByField = {},
     editableComponent,
     instanceModel,
     createButton,
@@ -82,6 +84,7 @@ export const CrudPage: React.FC<{
     addingColumns,
   }) => {
     const n = useNavigate();
+    const fieldReplace = searchByField[store.searchByField ?? ""];
     return (
       <div style={{ overflowY: "hidden" }}>
         <div style={{ display: "flex" }}>
@@ -120,11 +123,17 @@ export const CrudPage: React.FC<{
           />
 
           <div style={{ display: "flex" }}>
-            <InputV2
-              style={{ width: "100%" }}
-              label="поиск по полю"
-              onChange={(text) => store.findBy(text)}
-            />
+            {fieldReplace !== undefined ? (
+              <>{fieldReplace()}</>
+            ) : (
+              <>
+                <InputV2
+                  style={{ width: "100%" }}
+                  label="поиск по полю"
+                  onChange={(text) => store.findBy(text)}
+                />
+              </>
+            )}
 
             <Button
               style={{ width: 150 }}

@@ -50,7 +50,7 @@ model Recipe {
   weightOfComponentsAfterDusting          Int // Вес компонентов после отпыла
   auto                                    String // авто
   cardIndexNumber                         String // Номер в картотеке
-  comment String @default("") //коментарий
+  comment                                 String @default("") //коментарий
 }
 
 model Order {
@@ -68,5 +68,12 @@ model Order {
   consumablesJson                Json?
   markup                         Int      @default(0)
   createdAt                      DateTime @default(now())
-  user String
+  user                           String
+}
+
+model Reports {
+  id Int @id @default(autoincrement())
+  report Json //тело отчета
+  args Json //аругменты отчета
+  type String //тип отчета
 }

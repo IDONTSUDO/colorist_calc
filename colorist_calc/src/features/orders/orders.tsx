@@ -6,21 +6,66 @@ import { ModalV2 } from "../../core/ui/modal/modal";
 import { InputV3 } from "../../core/ui/input/input_v3";
 import PhoneInput from "../../core/ui/input/phone_input";
 import { Button } from "../../core/ui/button/Button";
-
+import { ru } from "date-fns/locale";
 import { CrudPage } from "../../core/ui/page/crud_page";
 import { useNavigate } from "react-router-dom";
 import { OrderPath } from "../order/order";
 import { Select } from "../../core/ui/select/select";
-
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 export const OrdersPath = "/orders";
 
 export const Orders = observer(() => {
   const store = useStore(OrdersStore);
-  const n = useNavigate();
+  const navigate = useNavigate();
+
   return (
     <>
       <div>
         <CrudPage
+          searchByField={{
+            createdAt: () => (
+              <>
+                <DayPicker
+                  mode="single"
+                  selected={new Date()}
+                  onSelect={() => {}}
+                  locale={ru}
+                  footer={
+                    // selected
+                    //   ? `Selected: ${selected.toLocaleDateString()}`
+                    "Pick a day."
+                  }
+                />
+              </>
+            ),
+            financeStatus: () => (
+              <>
+                <Select
+                  style={{ width: "100%" }}
+                  options={["Ожидает расчета", "Расчет произошел"].map((el) => {
+                    return { value: el, label: el };
+                  })}
+                  placeholder="Статусы финансовые"
+                  onChange={(text) => store.findBy(text)}
+                  value={store.searchValue ?? ""}
+                />
+              </>
+            ),
+            statusOrder: () => (
+              <>
+                <Select
+                  style={{ width: "100%" }}
+                  options={["Начат", "Готов", "На паузе"].map((el) => {
+                    return { value: el, label: el };
+                  })}
+                  placeholder="Статусы производственные"
+                  onChange={(text) => store.findBy(text)}
+                  value={store.searchValue ?? ""}
+                />
+              </>
+            ),
+          }}
           pageName="Заказы"
           missingKey={[
             "id",
@@ -38,7 +83,7 @@ export const Orders = observer(() => {
               jsx: (el) => (
                 <div>
                   <div
-                    onClick={() => n(OrderPath + "/" + el.id)}
+                    onClick={() => navigate(OrderPath + "/" + el.id)}
                     style={{ textDecoration: "underline", cursor: "pointer" }}
                   >
                     перейти в заказ
@@ -74,7 +119,7 @@ export const Orders = observer(() => {
             },
           ]}
           replacedColumns={[
-            { replace: "Отвственный", name: "personResponsibleForTheOrder" },
+            { replace: "Отвественный", name: "personResponsibleForTheOrder" },
             { replace: "Статус рецепта", name: "orderProcess" },
             { replace: "Авто", name: "auto" },
             { replace: "Код краски", name: "codePaint" },

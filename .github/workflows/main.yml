@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "23.9.0" # Замените на нужную версию Node.js
+          node-version: "23.9.0" 
       - name: Install dependencies Server
         run: cd colorist_calc_server && npm install
       - name: Build Server
@@ -35,11 +35,12 @@ jobs:
           echo "$KEY" | tr -d '\r' | ssh-add - > /dev/null
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
           rsync -r --delete-after ./colorist_calc/colorist_calc_server/ $USER@$HOST:/root/colorist_calc/colorist_calc_server/
-          ssh $USER@$HOST "
-          cd /root/colorist_calc/colorist_calc_server/ && \
-          npm install && \
-          npm run migrate && \
+          ssh $USER@$HOST << EOF
+          cd /root/colorist_calc/colorist_calc_server
+          npm install
+          npm run migrate
           npm run prod
+          EOF
           "
       - name: Install dependencies UI
         run: cd colorist_calc && npm install

@@ -4,6 +4,7 @@ import { ComponentsFeature } from "../../features/components/components";
 import { ConsumablesFeature } from "../../features/consumables/consumables";
 import { OrdersFeature } from "../../features/orders/orders";
 import { RecipesFeature } from "../../features/recipes/recipes";
+import { ReportsFeature } from "../../features/reports/reports";
 
 export const httpRoutes = [
   new AuthorizationFeature(),
@@ -12,4 +13,5 @@ export const httpRoutes = [
   new RecipesFeature(),
   new OrdersFeature(),
   new ConsumablesFeature(),
+  new ReportsFeature(),
 ];
