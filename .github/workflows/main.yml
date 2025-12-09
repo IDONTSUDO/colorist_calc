@@ -38,7 +38,7 @@ jobs:
           ssh $USER@$HOST << EOF
           export NVM_DIR="/root/.nvm"
           source "\$NVM_DIR/nvm.sh"
-          cd colorist_calc/colorist_calc_server/ && /root/.nvm/versions/node/v23.9.0/bin/npm run migrate && /root/.nvm/versions/node/v23.9.0/bin/npm run prod
+          cd colorist_calc/colorist_calc_server/ && npx prisma migrate deploy && npm run prod
           EOF
       - name: Install dependencies UI
         run: cd colorist_calc && npm install
