@@ -2,6 +2,7 @@ import { IsString } from "class-validator";
 import { FeatureHttpController } from "../../core/controllers/feature_http_controller";
 import {
   AccessLevel,
+  CallbackStrategyCreateDbModel,
   CallbackStrategyWithEmpty,
   CallbackStrategyWithValidationModel,
   ResponseBase,
@@ -83,14 +84,19 @@ export class AdminModel {
 //     );
 // }
 
-// export class NewAdmin {
-//   call = async () => {
-//     await new PrismaClient().admin.create({
-//       data: { login: "1235", password: "123`" },
-//     });
-//     console.log("new admin");
-//   };
-// }
+class UserModel {
+  @IsString()
+  login: string;
+  @IsString()
+  name: string;
+  @IsString()
+  password: string;
+}
+
+export class CreateUser extends CallbackStrategyCreateDbModel<UserModel> {
+  validationModel: ClassConstructor<UserModel> = UserModel;
+  dbCollectionName = "user";
+}
 
 export class AuthorizationFeature extends FeatureHttpController {
   constructor() {
@@ -104,6 +110,7 @@ export class AuthorizationFeature extends FeatureHttpController {
         AccessLevel.public,
         "GET"
       ),
+      new SubRouter("/create/user", new CreateUser(), AccessLevel.public),
       // new SubRouter("/admin/login", new LoginAdmin(), AccessLevel.public),
     ];
   }
