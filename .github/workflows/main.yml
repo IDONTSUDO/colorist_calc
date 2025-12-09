@@ -36,6 +36,8 @@ jobs:
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
           rsync -r --delete-after ./colorist_calc/colorist_calc_server/ $USER@$HOST:/root/colorist_calc/colorist_calc_server/
           ssh $USER@$HOST << EOF
+          export NVM_DIR="/root/.nvm"
+          source "\$NVM_DIR/nvm.sh"
           cd colorist_calc/colorist_calc_server/ && /root/.nvm/versions/node/v23.9.0/bin/npm run migrate && /root/.nvm/versions/node/v23.9.0/bin/npm run prod
           EOF
       - name: Install dependencies UI
