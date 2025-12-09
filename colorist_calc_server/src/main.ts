@@ -9,9 +9,7 @@ import { PrismaClient } from "@prisma/client";
 dotenv.config();
 extensions();
 
-const socketSubscribers: PrivateSocketSubscriber<any>[] = [
- 
-];
+const socketSubscribers: PrivateSocketSubscriber<any>[] = [];
 
 (async () => {
   new App(
