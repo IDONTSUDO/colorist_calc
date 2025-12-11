@@ -158,6 +158,7 @@ export abstract class FormState<V> extends UiErrorState<any> {
   };
 
   modalCancel = () => {
+    // this.viewModel = 
     this.isModalOpen = false;
   };
   async init(navigate?: NavigateFunction): Promise<any> {

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../core/helper/use_store";
-import { OrdersStore } from "./orders_store";
+import { OrdersStore, OrderViewModel } from "./orders_store";
 import { TextV2 } from "../../core/ui/text/text";
 import { ModalV2 } from "../../core/ui/modal/modal";
 import { InputV3 } from "../../core/ui/input/input_v3";
@@ -136,7 +136,10 @@ export const Orders = observer(() => {
         <ModalV2
           style={{ overflow: "auto", maxHeight: "100%" }}
           isOpen={store.isModalOpen}
-          onClose={store.modalCancel}
+          onClose={() => {
+            store.viewModel = new OrderViewModel();
+            store.modalCancel();
+          }}
           children={
             <>
               <InputV3

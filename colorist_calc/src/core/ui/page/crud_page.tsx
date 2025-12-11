@@ -250,7 +250,11 @@ export const CrudPage: React.FC<{
         <ModalV2
           style={modalStyle}
           isOpen={store.isModalOpen}
-          onClose={() => store.modalCancel()}
+          onClose={() => {
+            // @ts-expect-error
+            store.viewModel = new instanceModel();
+            store.modalCancel();
+          }}
           children={<>{editableComponent}</>}
         />
       </div>
