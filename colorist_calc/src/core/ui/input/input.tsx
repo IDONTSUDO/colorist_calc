@@ -29,7 +29,6 @@ export const Input: React.FC<{
     if (value.isNotEmpty()) {
       return "none";
     }
-    console.log(200);
     if (hasFocus) {
       return "none";
     }
