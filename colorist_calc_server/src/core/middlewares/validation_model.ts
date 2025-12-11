@@ -16,12 +16,9 @@ export const validationModelMiddleware = (
       return;
     }
     const model = plainToInstance(type, req[value]);
-    console.log(model);
     validate(model, { skipMissingProperties, whitelist, forbidNonWhitelisted }).then((errors: ValidationError[]) => {
-      console.log(errors.length);
       if (errors.length > 0) {
         const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(", ");
-        console.log(message);
         return res.status(400).json(message);
       } else {
         req["model"] = model;

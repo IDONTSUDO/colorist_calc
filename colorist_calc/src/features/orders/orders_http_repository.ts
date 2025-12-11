@@ -20,9 +20,9 @@ export class OrdersHttpRepository extends CrudHttpRepository<OrderViewModel> {
       return el.data;
     });
 
-  findClientInNumber = (value: string) =>
+  findClientInNumber = (value: string, prop: string) =>
     this._jsonRequest<ClientViewModel[]>(HttpMethod.POST, "/clients/find", {
-      prop: "numberPhone",
+      prop: prop,
       value: value,
     });
   getAllUsers = () => this._jsonRequest(HttpMethod.GET, "/get/all/users");

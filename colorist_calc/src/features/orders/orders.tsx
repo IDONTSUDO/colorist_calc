@@ -136,10 +136,7 @@ export const Orders = observer(() => {
         <ModalV2
           style={{ overflow: "auto", maxHeight: "100%" }}
           isOpen={store.isModalOpen}
-          onClose={() => {
-            store.viewModel = new OrderViewModel();
-            store.modalCancel();
-          }}
+          onClose={() => store.closeModalCreateOrder()}
           children={
             <>
               <InputV3
@@ -192,18 +189,59 @@ export const Orders = observer(() => {
                 }
               />
               <div style={{ height: 5 }} />
-              <TextV2 text="поиск клиента по номеру телефона" />
-              <div style={{ display: "flex" }}>
-                <PhoneInput
-                  onChange={(text) => (store.searchPhoneNumberField = text)}
-                />
-                <div style={{ width: 5 }} />
-                <Button
-                  text="поиск"
-                  style={{ width: 100 }}
-                  onClick={() => store.onClickFindButtonToSearchPhone()}
-                />
-              </div>
+              {store.findClientType === undefined ? (
+                <>
+                  <TextV2 text="Поиск клиента" />
+                  <div style={{ display: "flex" }}>
+                    <TextV2
+                      text="по ФИО"
+                      onClick={() => store.changeFindClientType("ПО ФИО")}
+                      style={{ textDecoration: "underline", cursor: "pointer" }}
+                    />
+                    <div style={{ width: 10 }} />
+                    <TextV2
+                      text="по номеру телефона"
+                      onClick={() => store.changeFindClientType("По телефону")}
+                      style={{ textDecoration: "underline", cursor: "pointer" }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
+              {store.findClientType === "ПО ФИО" ? (
+                <>
+                  <TextV2 text="поиск клиента по ФИО" />
+                  <div style={{ display: "flex" }}>
+                    <PhoneInput
+                      onChange={(text) => (store.searchPhoneNumberField = text)}
+                    />
+                    <div style={{ width: 5 }} />
+                    <Button
+                      text="поиск"
+                      style={{ width: 100 }}
+                      onClick={() => store.onClickFindButtonToSearchClient()}
+                    />
+                  </div>
+                </>
+              ) : store.findClientType === "По телефону" ? (
+                <>
+                  <TextV2 text="поиск клиента по номеру телефона" />
+                  <div style={{ display: "flex" }}>
+                    <PhoneInput
+                      onChange={(text) => (store.searchPhoneNumberField = text)}
+                    />
+                    <div style={{ width: 5 }} />
+                    <Button
+                      text="поиск"
+                      style={{ width: 100 }}
+                      onClick={() => store.onClickFindButtonToSearchClient()}
+                    />
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
               <div>
                 {store.clients.isEmpty() ? (
                   <>не найдено клиентов</>

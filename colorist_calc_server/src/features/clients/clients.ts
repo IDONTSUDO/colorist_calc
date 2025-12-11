@@ -9,6 +9,7 @@ import {
   CallbackFind,
   CallbackStrategyWithValidationModel,
   ResponseBase,
+  FindMultiProp,
 } from "../../core/controllers/http_controller";
 import { ClassConstructor } from "class-transformer";
 import { IsNumber, IsString } from "class-validator";
@@ -30,7 +31,9 @@ export class ClientEditModel extends ClientModel {
   @IsNumber()
   id: number;
 }
-
+export class FindClientManyProp extends FindMultiProp {
+  dbCollectionName: string = "client";
+}
 export class GetPaginationClients extends CallBackStrategyPagination<any> {
   dbCollectionName: string = "client";
 }
@@ -88,6 +91,12 @@ export class ClientsFeature extends FeatureHttpController {
         new DeleteClient(),
         AccessLevel.public,
         "DELETE"
+      ),
+      new SubRouter(
+        "/clients/find/many",
+        new FindClientManyProp(),
+        AccessLevel.public,
+        "POST"
       ),
     ];
   }

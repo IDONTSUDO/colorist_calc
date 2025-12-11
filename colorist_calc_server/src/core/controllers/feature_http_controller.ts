@@ -13,6 +13,7 @@ import {
   CallBackStrategyWithQueryPage,
   CallbackStrategyWithValidationModel,
   CoreHttpController,
+  FindMultiProp,
   ISubSetFeatureRouter,
   valid,
 } from "./http_controller";
@@ -20,6 +21,8 @@ import {
   validationMiddleware,
   validationMiddlewareNotResponse,
 } from "../middlewares/validation_user_auth";
+import { validationModel } from "../middlewares/validation_model_fn";
+
 
 export class FeatureHttpController extends CoreHttpController<any> {
   subRoutes: ISubSetFeatureRouter<any>[] = [];
@@ -31,7 +34,7 @@ export class FeatureHttpController extends CoreHttpController<any> {
     return {
       router: this.router.use(
         await Promise.all(
-          await this.subRoutes.map(async (el) => {
+          this.subRoutes.map(async (el) => {
             let url = el.subUrl;
             if (el.subUrl.at(0) !== "/") {
               url = `/${el.subUrl}`;
@@ -101,9 +104,16 @@ export class FeatureHttpController extends CoreHttpController<any> {
 
                     return;
                   }
-
+                  if (el.fn instanceof FindMultiProp) {
+                    (await validationModel(el.fn.model, req.body)).fold(
+                      async (ok) =>
+                        // @ts-ignore
+                        await this.responseHelper(res, el.fn.call(ok)),
+                      async (err) => res.status(400).json(err)
+                    );
+                    return;
+                  }
                   if (el.fn instanceof CallbackFind) {
-                  
                     if (req.body.prop === undefined) {
                       return res.status(400).json("need prop key");
                     }

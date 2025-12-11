@@ -47,6 +47,7 @@ export class OrdersStore extends CrudFormStore<
   searchPhoneNumberField?: string;
   clients: ClientViewModel[] = [];
   users: IUser[] = [];
+  findClientType?: string;
   constructor() {
     super();
     makeAutoObservable(this);
@@ -60,14 +61,22 @@ export class OrdersStore extends CrudFormStore<
     order.statusOrder = value;
     this.repository.updateOrder(order);
   };
-  onClickFindButtonToSearchPhone = async () => {
+  onClickFindButtonToSearchClient = async () => {
     if (this.searchPhoneNumberField === undefined) {
       message.error("введите телефон");
       return;
     }
     await this.mapOk(
       "clients",
-      this.repository.findClientInNumber(this.searchPhoneNumberField)
+      this.repository.findClientInNumber(this.searchPhoneNumberField, this.findClientType === 'ПО ФИО' ? "": "numberPhone")
     );
+  };
+  closeModalCreateOrder = (): void => {
+    this.viewModel = new OrderViewModel();
+    this.findClientType = undefined;  
+    this.modalCancel();
+  };
+  changeFindClientType = (type: string): void => {
+    this.findClientType = type;
   };
 }

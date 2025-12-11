@@ -19,7 +19,7 @@ export const Consumables = observer(() => {
       instanceModel={ConsumablesViewModel}
       createButton={true}
       replacedColumns={[
-        { name: "costPrice", replace: "себестоймость за еденицу измрения" },
+        { name: "costPrice", replace: "себестоймость за единицу измрения" },
         { name: "description", replace: "название" },
         { name: "currentBalance", replace: "текущий баланс" },
         { name: "unitOfMeasurement", replace: "единица измерения" },

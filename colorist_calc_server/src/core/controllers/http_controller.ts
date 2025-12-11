@@ -2,9 +2,9 @@ import { validationModelMiddleware } from "../middlewares/validation_model";
 import { Result } from "../helpers/result";
 import { Router, Request, Response } from "express";
 import { CoreValidation } from "../validations/core_validation";
-import { ClassConstructor, plainToInstance } from "class-transformer";
+import { ClassConstructor, plainToInstance, Type } from "class-transformer";
 import { IRouteModel, Routes } from "../models/routes";
-import { validate, ValidationError } from "class-validator";
+import { IsString, validate, ValidationError } from "class-validator";
 import { Prisma, PrismaClient } from "@prisma/client";
 export abstract class EditModel {
   id: number;
@@ -152,6 +152,54 @@ export abstract class CallbackFind extends CallbackCore {
   }
 }
 
+class Prop {
+  @IsString()
+  key: string;
+  @IsString()
+  value: string;
+}
+export class FindQuery {
+  @IsString()
+  logicQuery: string = "OR";
+  @Type(() => Prop)
+  prop: Prop[];
+}
+
+export abstract class FindMultiProp extends CallbackCore {
+  model = FindQuery ;
+  abstract dbCollectionName: string;
+  async call(model: FindQuery): ResponseBase {
+    let result = null;
+    try {
+      result = await this.client[`${this.dbCollectionName}`].findMany({
+        where: {
+          [model.logicQuery]: model.prop.map((el) => {
+            return {
+              [el.key]: { contains: el.value, mode: "insensitive" },
+            };
+          }),
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      result = null;
+    }
+    return Result.isNotNull(result);
+  }
+}
+// const p = new Prop();
+// p.key = "name";
+// p.value = "1";
+// const p1 = new Prop();
+// p1.key = "family";
+// p1.value = "1";
+// const findQuery = new FindQuery();
+// findQuery.logicQuery = "AND";
+// findQuery.prop = [p, p1];
+
+// new FindMulti().call(findQuery).then((data) => {
+//   console.log(data);
+// });
 export type callbackUpdateDelete = (id: number) => Promise<void>;
 export abstract class CallBackStrategyPagination<T> extends CallbackCore {
   pageSize: number = 10;
@@ -332,6 +380,7 @@ export class SubRouter<A> implements ISubSetFeatureRouter<A> {
     | CallBackStrategyPagination<A>
     | CallbackStrategyUpdateModel<any>
     | CallBackStrategyDeleteModelByQueryId
+    | FindMultiProp
     | CallbackFind;
   constructor(
     subUrl: string,
@@ -345,6 +394,7 @@ export class SubRouter<A> implements ISubSetFeatureRouter<A> {
       | CallBackStrategyPagination<A>
       | CallbackStrategyUpdateModel<any>
       | CallBackStrategyDeleteModelByQueryId
+      | FindMultiProp
       | CallbackFind,
 
     accessLevel = AccessLevel.user,
@@ -372,6 +422,7 @@ export interface ISubSetFeatureRouter<A> {
     | CallBackStrategyPagination<A>
     | CallbackStrategyUpdateModel<any>
     | CallBackStrategyDeleteModelByQueryId
+    | FindMultiProp
     | CallbackFind;
 }
 
