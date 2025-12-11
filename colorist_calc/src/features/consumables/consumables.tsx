@@ -13,6 +13,7 @@ export const Consumables = () => {
       isEditable={true}
       store={store}
       missingKey={["id"]}
+      pageName="Расходники"
       instanceModel={ConsumablesViewModel}
       createButton={true}
       replacedColumns={[
