@@ -5,6 +5,10 @@ import { ConsumablesHttpRepository } from "./consumables_repository";
 import makeAutoObservable from "mobx-store-inheritance";
 
 export class ConsumablesViewModel extends ValidationModel {
+  constructor() {
+    super();
+    makeAutoObservable(this);
+  }
   @IsNumber(
     {},
     { message: "Поле цена за единицу измеренеия является обязательным" }
@@ -15,7 +19,7 @@ export class ConsumablesViewModel extends ValidationModel {
   @IsNumber({}, { message: "Поле текущий является обязательным" })
   currentBalance: number; // текущий остаток
   @IsString({ message: "Поле еденица измерения является обязательным" })
-  unitOfMeasurement: string = 'Граммы';  //еденица измерения
+  unitOfMeasurement: string = "Граммы"; //еденица измерения
 }
 export class ConsumablesStore extends CrudFormStore<
   ConsumablesViewModel,

@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import { useStore } from "../../core/helper/use_store";
 import { Button } from "../../core/ui/button/Button";
 import { InputV3 } from "../../core/ui/input/input_v3";
@@ -6,8 +7,9 @@ import { Select } from "../../core/ui/select/select";
 import { ConsumablesStore, ConsumablesViewModel } from "./consumables_store";
 
 export const ConsumablesPath = "/consumables";
-export const Consumables = () => {
+export const Consumables = observer(() => {
   const store = useStore(ConsumablesStore);
+  console.log(store.viewModel.unitOfMeasurement);
   return (
     <CrudPage
       isEditable={true}
@@ -70,16 +72,14 @@ export const Consumables = () => {
             }
           /> */}
           <Select
-            options={["Граммы", "Милилитры","Штуки"].map((el) => {
+            options={["Граммы", "Милилитры", "Штуки"].map((el) => {
               return {
                 value: el,
                 label: el,
               };
             })}
             value={store.viewModel.unitOfMeasurement}
-            onChange={(text) => {
-              store.updateForm({ unitOfMeasurement: text });
-            }}
+            onChange={(text) => store.updateForm({ unitOfMeasurement: text })}
           />
           <div style={{ height: 10 }} />
           <Button
@@ -93,4 +93,4 @@ export const Consumables = () => {
       }
     />
   );
-};
+});
