@@ -35,7 +35,6 @@ export const InputV2: React.FC<{
   useEffect(() => {
     ref.current?.addEventListener("focus", () => {
       setFocus(true);
-      console.log("      setFocus(true);");
     });
 
     ref.current?.addEventListener("blur", () => {
@@ -43,6 +42,7 @@ export const InputV2: React.FC<{
     });
   });
   const getDisplay = () => {
+    
     if (value.length !== 0 && value.length !== 1) {
       return "none";
     }
@@ -51,7 +51,7 @@ export const InputV2: React.FC<{
       return "none";
     }
 
-    return "block";
+    return "none";
   };
   return (
     <div style={style}>

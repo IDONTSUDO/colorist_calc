@@ -26,10 +26,10 @@ export const Input: React.FC<{
     });
   });
   const getDisplay = () => {
-    if (value.length !== 0 && value.length !== 1) {
+    if (value.isNotEmpty()) {
       return "none";
     }
-
+    console.log(200);
     if (hasFocus) {
       return "none";
     }
